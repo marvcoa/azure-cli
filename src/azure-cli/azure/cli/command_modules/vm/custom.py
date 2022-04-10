@@ -1161,12 +1161,21 @@ def get_vm_details(cmd, resource_group_name, vm_name, include_user_data=False):
     from msrestazure.tools import parse_resource_id
     from azure.cli.command_modules.vm._vm_utils import get_target_network_api
     result = get_instance_view(cmd, resource_group_name, vm_name, include_user_data)
+
+    res = result.id.split('/')
+    res[2] = "*****-*****-*****-*****"
+    result.id = '/'.join(res)
+
+
     network_client = get_mgmt_service_client(
         cmd.cli_ctx, ResourceType.MGMT_NETWORK, api_version=get_target_network_api(cmd.cli_ctx))
     public_ips = []
     fqdns = []
     private_ips = []
     mac_addresses = []
+
+
+
     # pylint: disable=line-too-long,no-member
     for nic_ref in result.network_profile.network_interfaces:
         nic_parts = parse_resource_id(nic_ref.id)
@@ -1227,14 +1236,14 @@ def list_skus(cmd, location=None, size=None, zone=None, show_all=None, resource_
     return result
 
 
-def list_vm(cmd, resource_group_name=None, show_details=False):
+def list_vm(cmd, resource_group_name=None, show_details=False, masking=False):
     ccf = _compute_client_factory(cmd.cli_ctx)
     vm_list = ccf.virtual_machines.list(resource_group_name=resource_group_name) \
         if resource_group_name else ccf.virtual_machines.list_all()
     if show_details:
         return [get_vm_details(cmd, _parse_rg_name(v.id)[0], v.name) for v in vm_list]
 
-    return list(vm_list)
+    return vm_list 
 
 
 def list_vm_ip_addresses(cmd, resource_group_name=None, vm_name=None):
