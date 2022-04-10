@@ -431,6 +431,8 @@ def load_arguments(self, _):
     for scope in ['vm show', 'vm list']:
         with self.argument_context(scope) as c:
             c.argument('show_details', action='store_true', options_list=['--show-details', '-d'], help='show public ip address, FQDN, and power states. command will run slow')
+            c.argument('enable_mask', action='store_true', options_list=['--enable-mask', '-m'], help='enable masking of subscription ids for privacy')
+
 
     for scope in ['vm show', 'vmss show']:
         with self.argument_context(scope) as c:
@@ -515,7 +517,7 @@ def load_arguments(self, _):
 
     with self.argument_context('vm image list') as c:
         c.argument('image_location', get_location_type(self.cli_ctx))
-        c.argument('edge_zone', edge_zone_type)
+        c.argument('edge_zone', edge_zone_type)    
 
     with self.argument_context('vm image list-offers') as c:
         c.argument('edge_zone', edge_zone_type)
@@ -1019,6 +1021,8 @@ def load_arguments(self, _):
             c.argument('plan_product', help='plan product')
             c.argument('plan_publisher', help='plan publisher')
             c.argument('plan_promotion_code', help='plan promotion code')
+
+
 
     for scope in ['vm create', 'vmss create', 'vm identity assign', 'vmss identity assign']:
         with self.argument_context(scope) as c:

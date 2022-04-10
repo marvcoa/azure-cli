@@ -788,7 +788,7 @@ def create_vm(cmd, vm_name, resource_group_name, image=None, size='Standard_DS1_
               enable_hotpatching=None, platform_fault_domain=None, security_type=None, enable_secure_boot=None,
               enable_vtpm=None, count=None, edge_zone=None, nic_delete_option=None, os_disk_delete_option=None,
               data_disk_delete_option=None, user_data=None, capacity_reservation_group=None, enable_hibernation=None,
-              v_cpus_available=None, v_cpus_per_core=None, accept_term=None):
+              v_cpus_available=None, v_cpus_per_core=None, accept_term=None,enable_mask=None):
 
     from azure.cli.core.commands.client_factory import get_subscription_id
     from azure.cli.core.util import random_string, hash_string
@@ -1227,13 +1227,15 @@ def list_skus(cmd, location=None, size=None, zone=None, show_all=None, resource_
     return result
 
 
-def list_vm(cmd, resource_group_name=None, show_details=False):
+def list_vm(cmd, resource_group_name=None, show_details=False, enable_mask=False):
     ccf = _compute_client_factory(cmd.cli_ctx)
     vm_list = ccf.virtual_machines.list(resource_group_name=resource_group_name) \
         if resource_group_name else ccf.virtual_machines.list_all()
     if show_details:
         return [get_vm_details(cmd, _parse_rg_name(v.id)[0], v.name) for v in vm_list]
 
+    if enable_mask:
+        raise Exception("will implement to enable masking")
     return list(vm_list)
 
 
