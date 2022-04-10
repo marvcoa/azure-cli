@@ -431,6 +431,8 @@ def load_arguments(self, _):
     for scope in ['vm show', 'vm list']:
         with self.argument_context(scope) as c:
             c.argument('show_details', action='store_true', options_list=['--show-details', '-d'], help='show public ip address, FQDN, and power states. command will run slow')
+            c.argument('enable_mask', action='store_true', options_list=['--enable-mask', '-m'], help='enable masking of subscription ids for privacy')
+
 
     for scope in ['vm show', 'vmss show']:
         with self.argument_context(scope) as c:
